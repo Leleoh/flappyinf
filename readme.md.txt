@@ -1,0 +1,1 @@
+Esse repositório contém os arquivos do jogo "Flappy Inf", desenvolvido pelos alunos Leonel e Matheus utilizando a linguagem C e a biblioteca raylib para a discipila de Algoritmos e Programação.
