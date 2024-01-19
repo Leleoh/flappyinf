@@ -1,61 +1,43 @@
-#include "raylib.h"
-#define BACKGROUND_WIDTH 2400
-#define BACKGROUND_HEIGHT 800
+#include <raylib.h>
 
-int main() {
-    // Inicializar a janela
+int main()
+{
+    //Inicialização da janela
     const int screenWidth = 1200;
     const int screenHeight = 800;
     InitWindow(screenWidth, screenHeight, "FlappyInf");
 
-    // Carregar a imagem de fundo
-    Image backgroundImage = LoadImage("C:/Users/leone/Desktop/flappyinf/imgs/floordia.png");
-    Texture2D backgroundTexture = LoadTextureFromImage(backgroundImage);
-    UnloadImage(backgroundImage);
+    //Carregar o plano de fundo do menu
+    Texture2D background = LoadTexture("C:/Users/leone/Desktop/flappyinf/imgs/floordia.png");
 
-    //Posição do cenário
-    float backgroundX = 0;
-
-    // Configurar a câmera 2D
-    Camera2D camera = { 0 };
-    camera.target = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
-    camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
-    camera.rotation = 0.0f;
-    camera.zoom = 1.0f;
-
-    // Definir a cor de fundo da janela
+    //Taxa de atualização do jogo
     SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
-        // Lógica do jogo aqui
+    //Loop Principal
+    while(!WindowShouldClose()) //Detecta o fechamento da janela
+        {
+        //Atualizar
 
-        //Atualiza posição do cenário
-        backgroundX -= 2.0f;
-
-        // Se o cenário sair da tela, resete a posição para criar um efeito de loop
-        if (backgroundX <= -BACKGROUND_WIDTH) {
-            backgroundX = 0;
-        }
-
-        // Desenha o cenário na posição atualizada e também na posição x + largura para a repetição suave
-        DrawTextureEx(backgroundTexture, (Vector2){backgroundX, 0}, 0.0f, 1.0f, WHITE);
-        DrawTextureEx(backgroundTexture, (Vector2){backgroundX + BACKGROUND_WIDTH, 0}, 0.0f, 1.0f, WHITE);
-
-        // Desenhar
+        //Desenhar
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        // Desenhar o plano de fundo
-        DrawTexture(backgroundTexture, 0, 0, WHITE);
+        //Desenhar o plano de fundo
+        DrawTexture(background, 0, 0, WHITE);
 
-        // Desenhar elementos do jogo aqui
+        //Futuros elementos
+
 
         EndDrawing();
+
+
+
     }
 
-    // Limpar recursos
-    UnloadTexture(backgroundTexture);
+    //Limpar e fechar
+    UnloadTexture(background);
     CloseWindow();
 
     return 0;
+
 }
