@@ -1,32 +1,61 @@
 #include "raylib.h"
-#include <string.h>
-#define LARGURA 800
-#define ALTURA 450
-int main(void){
- char texto[50] = "Pressione uma seta";//texto inicial
- //--------------------------------------------------------------------------------------
- //Inicializações
- InitWindow(LARGURA, ALTURA, "Teclas");//Inicializa janela, com certo tamanho e título
- SetTargetFPS(60);// Ajusta a execução do jogo para 60 frames por segundo
- //--------------------------------------------------------------------------------------
- //Laço principal do jogo
- while (!WindowShouldClose()) // Detect window close button or ESC key
- {
- // Trata entrada do usuário e atualiza estado do jogo
- //----------------------------------------------------------------------------------
- if (IsKeyPressed(KEY_RIGHT)) strcpy(texto,"Direita");
- if (IsKeyPressed(KEY_LEFT)) strcpy(texto,"Esquerda");
- if (IsKeyPressed(KEY_UP)) strcpy(texto,"Cima");
- if (IsKeyPressed(KEY_DOWN)) strcpy(texto,"Baixo");
- //----------------------------------------------------------------------------------
- // Atualiza a representação visual a partir do estado do jogo
- //----------------------------------------------------------------------------------
- BeginDrawing();//Inicia o ambiente de desenho na tela
- ClearBackground(RAYWHITE);//Limpa a tela e define cor de fundo
- DrawText(texto, 300, 200, 40, RED);//Desenha um texto, com posição, tamanho e cor
- EndDrawing();//Finaliza o ambiente de desenho na tela
- //----------------------------------------------------------------------------------
- }
- CloseWindow();// Fecha a janela e o contexto OpenGL
- return 0;
- }
+#define BACKGROUND_WIDTH 2400
+#define BACKGROUND_HEIGHT 800
+
+int main() {
+    // Inicializar a janela
+    const int screenWidth = 1200;
+    const int screenHeight = 800;
+    InitWindow(screenWidth, screenHeight, "FlappyInf");
+
+    // Carregar a imagem de fundo
+    Image backgroundImage = LoadImage("C:/Users/leone/Desktop/flappyinf/imgs/floordia.png");
+    Texture2D backgroundTexture = LoadTextureFromImage(backgroundImage);
+    UnloadImage(backgroundImage);
+
+    //Posição do cenário
+    float backgroundX = 0;
+
+    // Configurar a câmera 2D
+    Camera2D camera = { 0 };
+    camera.target = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
+    camera.offset = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
+
+    // Definir a cor de fundo da janela
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose()) {
+        // Lógica do jogo aqui
+
+        //Atualiza posição do cenário
+        backgroundX -= 2.0f;
+
+        // Se o cenário sair da tela, resete a posição para criar um efeito de loop
+        if (backgroundX <= -BACKGROUND_WIDTH) {
+            backgroundX = 0;
+        }
+
+        // Desenha o cenário na posição atualizada e também na posição x + largura para a repetição suave
+        DrawTextureEx(backgroundTexture, (Vector2){backgroundX, 0}, 0.0f, 1.0f, WHITE);
+        DrawTextureEx(backgroundTexture, (Vector2){backgroundX + BACKGROUND_WIDTH, 0}, 0.0f, 1.0f, WHITE);
+
+        // Desenhar
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        // Desenhar o plano de fundo
+        DrawTexture(backgroundTexture, 0, 0, WHITE);
+
+        // Desenhar elementos do jogo aqui
+
+        EndDrawing();
+    }
+
+    // Limpar recursos
+    UnloadTexture(backgroundTexture);
+    CloseWindow();
+
+    return 0;
+}
