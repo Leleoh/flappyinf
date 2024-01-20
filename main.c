@@ -28,8 +28,12 @@ int main()
     float posY = 100.0f;
     float speedpassaro = 0.0f;
     const float gravidade = 0.6f;
+    const float gravidadedobro = 1.2f;
     const float jumpForce = -10.0f;
-    const float maxrotation = 25.0f;
+    const float maxrotation = 5.0f;
+    const float rotationDelay = 0.03f;
+    float rotationStartTime = 0.0f;
+
 
     //Variáveis de posição e controle do chão
     float groundX1 = 0.0f;
@@ -47,11 +51,18 @@ int main()
         }
 
         //Gravidade
-        speedpassaro += gravidade;
+        if (speedpassaro < 0){
+            //Subida
+            speedpassaro += gravidade * gravidade;
+        }
+        else{
+            //Descida
+            speedpassaro += gravidade * gravidadedobro;
+        }
 
         //Limitação da velocidade de descida
         if (speedpassaro > 10.0f){
-            speedpassaro = 10.0f;
+            speedpassaro = 12.0f;
         }
 
         //Movimento do pássaro
@@ -80,14 +91,16 @@ int main()
 
 
 
-        /*Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA NÃO FUNCIONA)
+        //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA NÃO FUNCIONA)
         float rotation = 0.0f;
         if (speedpassaro < 0){
-            rotation = maxrotation * DEG2RAD;
+            rotation = -maxrotation - 10; //* DEG2RAD;
+            rotationStartTime = GetTime();
         }
-        else if (speedpassaro > 0){
-            rotation = -maxrotation * DEG2RAD;
-        */
+        else if (speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay){
+            rotation = maxrotation + 20; //* DEG2RAD;
+        }
+
 
         //Desenhar
         BeginDrawing();
@@ -101,17 +114,18 @@ int main()
         DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
         //Asas batendo
-        switch(frameAtual){
+        // Asas batendo
+    switch(frameAtual){
         case 0:
-            DrawTexture(asa1, posX, posY, WHITE);
+            DrawTexturePro(asa1, (Rectangle){0, 0, asa1.width, asa1.height}, (Rectangle){posX, posY, asa1.width, asa1.height}, (Vector2){asa1.width / 2, asa1.height / 2}, rotation, WHITE);
             break;
         case 1:
-            DrawTexture(asa2, posX, posY, WHITE);
+            DrawTexturePro(asa2, (Rectangle){0, 0, asa2.width, asa2.height}, (Rectangle){posX, posY, asa2.width, asa2.height}, (Vector2){asa2.width / 2, asa2.height / 2}, rotation, WHITE);
             break;
         case 2:
-            DrawTexture(asa3, posX, posY, WHITE);
+            DrawTexturePro(asa3, (Rectangle){0, 0, asa3.width, asa3.height}, (Rectangle){posX, posY, asa3.width, asa3.height}, (Vector2){asa3.width / 2, asa3.height / 2}, rotation, WHITE);
             break;
-        };
+        }
 
 
         //Futuros elementos
