@@ -80,7 +80,7 @@ int main()
 
 
 
-        /*Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA INCOMPLETO)
+        /*Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA NÃO FUNCIONA)
         float rotation = 0.0f;
         if (speedpassaro < 0){
             rotation = maxrotation * DEG2RAD;
