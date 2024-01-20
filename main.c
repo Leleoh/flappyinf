@@ -31,6 +31,11 @@ int main()
     const float jumpForce = -10.0f;
     const float maxrotation = 25.0f;
 
+    //Variáveis de posição e controle do chão
+    float groundX1 = 0.0f;
+    float groundX2 = screenWidth;
+    float groundSpeed = 1.0f;
+
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
         {
@@ -62,14 +67,27 @@ int main()
             timer = 0;
         }
 
-        //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
+        //Movimento do chão
+        groundX1 -= groundSpeed;
+        groundX2 -= groundSpeed;
+
+        if (groundX1 <= -screenWidth){
+            groundX1 = screenWidth;
+        }
+        if (groundX2 <= -screenWidth){
+            groundX2 = screenWidth;
+        }
+
+
+
+        /*Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA INCOMPLETO)
         float rotation = 0.0f;
         if (speedpassaro < 0){
-            rotation = maxrotation;
+            rotation = maxrotation * DEG2RAD;
         }
         else if (speedpassaro > 0){
-            rotation = -maxrotation;
-        }
+            rotation = -maxrotation * DEG2RAD;
+        */
 
         //Desenhar
         BeginDrawing();
@@ -77,6 +95,10 @@ int main()
 
         //Desenhar o plano de fundo
         DrawTexture(background, 0, 0, WHITE);
+
+        //Desenhar o chão
+        DrawTexture(background, groundX1, screenHeight - background.height, WHITE);
+        DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
         //Asas batendo
         switch(frameAtual){
@@ -89,7 +111,7 @@ int main()
         case 2:
             DrawTexture(asa3, posX, posY, WHITE);
             break;
-        }
+        };
 
 
         //Futuros elementos
