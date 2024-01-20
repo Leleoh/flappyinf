@@ -23,10 +23,34 @@ int main()
     int timer = 0;
     int frameSpeed = 10;
 
+    //Variáveis de posição e velocidade do pássaro (X, Y)
+    float posX = 100.0f;
+    float posY = 100.0f;
+    float speedpassaro = 0.0f;
+    const float gravidade = 0.6f;
+    const float jumpForce = -10.0f;
+    const float maxrotation = 25.0f;
+
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
         {
         //Atualizar
+
+        //Controle do pulo
+        if (IsKeyPressed(KEY_SPACE)){
+            speedpassaro = jumpForce;
+        }
+
+        //Gravidade
+        speedpassaro += gravidade;
+
+        //Limitação da velocidade de descida
+        if (speedpassaro > 10.0f){
+            speedpassaro = 10.0f;
+        }
+
+        //Movimento do pássaro
+        posY += speedpassaro;
 
         //Asas batendo
         timer ++;
@@ -36,6 +60,15 @@ int main()
                 frameAtual = 0;
             }
             timer = 0;
+        }
+
+        //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
+        float rotation = 0.0f;
+        if (speedpassaro < 0){
+            rotation = maxrotation;
+        }
+        else if (speedpassaro > 0){
+            rotation = -maxrotation;
         }
 
         //Desenhar
@@ -48,13 +81,13 @@ int main()
         //Asas batendo
         switch(frameAtual){
         case 0:
-            DrawTexture(asa1, 0, 0, WHITE);
+            DrawTexture(asa1, posX, posY, WHITE);
             break;
         case 1:
-            DrawTexture(asa2, 0, 0, WHITE);
+            DrawTexture(asa2, posX, posY, WHITE);
             break;
         case 2:
-            DrawTexture(asa3, 0, 0, WHITE);
+            DrawTexture(asa3, posX, posY, WHITE);
             break;
         }
 
