@@ -2,7 +2,7 @@
 
 int main()
 {
-    //Inicialização da janela
+    //InicializaÃ§Ã£o da janela
     const int screenWidth = 1200;
     const int screenHeight = 800;
     InitWindow(screenWidth, screenHeight, "FlappyInf");
@@ -10,20 +10,20 @@ int main()
     //Carregar o plano de fundo do menu
     Texture2D background = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/floordia.png");
 
-    //Taxa de atualização do jogo
+    //Taxa de atualizaÃ§Ã£o do jogo
     SetTargetFPS(60);
 
-    //Carregando os frames do pássaro
+    //Carregando os frames do pÃ¡ssaro
     Texture2D asa1 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa1.png");
     Texture2D asa2 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa2.png");
     Texture2D asa3 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa3.png");
 
-    //Variáveis de controle para animação das asas
+    //VariÃ¡veis de controle para animaÃ§Ã£o das asas
     int frameAtual = 0;
     int timer = 0;
     int frameSpeed = 10;
 
-    //Variáveis de posição e velocidade do pássaro (X, Y)
+    //VariÃ¡veis de posiÃ§Ã£o e velocidade do pÃ¡ssaro (X, Y)
     float posX = 100.0f;
     float posY = 100.0f;
     float speedpassaro = 0.0f;
@@ -35,7 +35,7 @@ int main()
     float rotationStartTime = 0.0f;
 
 
-    //Variáveis de posição e controle do chão
+    //VariÃ¡veis de posiÃ§Ã£o e controle do chÃ£o
     float groundX1 = 0.0f;
     float groundX2 = screenWidth;
     float groundSpeed = 1.0f;
@@ -60,12 +60,12 @@ int main()
             speedpassaro += gravidade * gravidadedobro;
         }
 
-        //Limitação da velocidade de descida
+        //LimitaÃ§Ã£o da velocidade de descida
         if (speedpassaro > 10.0f){
             speedpassaro = 12.0f;
         }
 
-        //Movimento do pássaro
+        //Movimento do pÃ¡ssaro
         posY += speedpassaro;
 
         //Asas batendo
@@ -78,7 +78,7 @@ int main()
             timer = 0;
         }
 
-        //Movimento do chão
+        //Movimento do chÃ£o
         groundX1 -= groundSpeed;
         groundX2 -= groundSpeed;
 
@@ -91,7 +91,7 @@ int main()
 
 
 
-        //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha) (AINDA NÃO FUNCIONA)
+        //RotaÃ§Ã£o de descida e subida do pÃ¡ssaro influenciada pela velocidade (A inclinadinha)
         float rotation = 0.0f;
         if (speedpassaro < 0){
             rotation = -maxrotation - 10; //* DEG2RAD;
@@ -109,7 +109,7 @@ int main()
         //Desenhar o plano de fundo
         DrawTexture(background, 0, 0, WHITE);
 
-        //Desenhar o chão
+        //Desenhar o chÃ£o
         DrawTexture(background, groundX1, screenHeight - background.height, WHITE);
         DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
