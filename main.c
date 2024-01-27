@@ -1,22 +1,27 @@
 #include <raylib.h>
+#include "./src/movement.h"
 
+#include "./src/defines.h"
+
+
+Texture2D asa1;
+Texture2D asa2;
+Texture2D asa3;
 int main()
 {
     //Inicialização da janela
-    const int screenWidth = 1200;
-    const int screenHeight = 800;
     InitWindow(screenWidth, screenHeight, "FlappyInf");
 
     //Carregar o plano de fundo do menu
-    Texture2D background = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/floordia.png");
+    Texture2D background = LoadTexture("./Recursos/floordia.png");
 
     //Taxa de atualização do jogo
     SetTargetFPS(60);
 
     //Carregando os frames do pássaro
-    Texture2D asa1 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa1.png");
-    Texture2D asa2 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa2.png");
-    Texture2D asa3 = LoadTexture("C:/Users/leone/Desktop/flappyinf/Recursos/asa3.png");
+    asa1 = LoadTexture("./Recursos/asa1.png");
+    asa2 = LoadTexture("./Recursos/asa2.png");
+    asa3 = LoadTexture("./Recursos/asa3.png");
 
     //Variáveis de controle para animação das asas
     int frameAtual = 0;
@@ -27,11 +32,6 @@ int main()
     float posX = 100.0f;
     float posY = 100.0f;
     float speedpassaro = 0.0f;
-    const float gravidade = 0.6f;
-    const float gravidadedobro = 1.2f;
-    const float jumpForce = -10.0f;
-    const float maxrotation = 5.0f;
-    const float rotationDelay = 0.03f;
     float rotationStartTime = 0.0f;
 
 
@@ -45,8 +45,7 @@ int main()
         {
         //Atualizar
 
-        //Controle do pulo
-        if (IsKeyPressed(KEY_SPACE)){
+    if (IsKeyPressed(KEY_SPACE)){
             speedpassaro = jumpForce;
         }
 

@@ -5,3 +5,19 @@
 1705764449 source:c:\users\leone\desktop\flappyinf\teste.c
 	<raylib.h>
 
+1706329078 source:f:\flappy\flappyinf\main.c
+	<raylib.h>
+	"./src/movement.h"
+	"./src/defines.h"
+
+1706329113 source:f:\flappy\flappyinf\src\movement.c
+	<raylib.h>
+	"defines.h"
+	"movement.h"
+
+1706328935 f:\flappy\flappyinf\src\movement.h
+
+1706328425 source:f:\flappy\flappyinf\src\defines.c
+
+1706328583 f:\flappy\flappyinf\src\defines.h
+
