@@ -1,6 +1,8 @@
 # depslib dependency file v1.0
-1705778865 source:c:\users\leone\desktop\flappyinf\main.c
+1706367980 source:c:\users\leone\desktop\flappyinf\main.c
 	<raylib.h>
+	"./src/movement.h"
+	"./src/defines.h"
 
 1705764449 source:c:\users\leone\desktop\flappyinf\teste.c
 	<raylib.h>
@@ -20,4 +22,13 @@
 1706328425 source:f:\flappy\flappyinf\src\defines.c
 
 1706328583 f:\flappy\flappyinf\src\defines.h
+
+1706367980 c:\users\leone\desktop\flappyinf\src\movement.h
+
+1706367980 c:\users\leone\desktop\flappyinf\src\defines.h
+
+1706367980 source:c:\users\leone\desktop\flappyinf\src\movement.c
+	<raylib.h>
+	"defines.h"
+	"movement.h"
 
