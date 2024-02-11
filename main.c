@@ -2,6 +2,8 @@
 
 int main()
 {
+
+
     //Inicializar dispositivo de áudio
     InitAudioDevice();
 
@@ -9,6 +11,10 @@ int main()
     const int screenWidth = 1200;
     const int screenHeight = 800;
     InitWindow(screenWidth, screenHeight, "FlappyInf");
+
+
+    // Definição da posição e dimensões do chão
+    Rectangle ground = { 0, screenHeight - 50, screenWidth, 50 };
 
     //Carregar o plano de fundo do jogo
     Texture2D background = LoadTexture("./Recursos/floordia.png");
@@ -50,6 +56,24 @@ int main()
     const float rotationDelay = 0.03f;
     float rotationStartTime = 0.0f;
 
+    //variáveis relacionadas ao chão
+    int FloorX = 0;
+    int FloorY = screenHeight-100;
+    int FloorW = screenWidth;
+    int FloorH = 20;
+    //variáveis relacionadas ao teto
+    int RoofX = 0;
+    int RoofY = 0;
+    int RoofW = screenWidth;
+    int RoofH = 3;
+
+    //colisões
+    Rectangle Floor = {FloorX, FloorY, FloorW, FloorH};
+    bool collision;
+    Rectangle Roof = {RoofX, RoofY, RoofW, RoofH};
+
+
+
 
     //Variáveis de posição e controle do chão
     float groundX1 = 0.0f;
@@ -59,7 +83,7 @@ int main()
     //Carregar música do menu
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
     PlayMusicStream(ostmenu);
-    const float volumemenu = 0.5f;
+    const float volumemenu = 0.3f;
     SetMusicVolume(ostmenu, volumemenu);
 
     //Carregar música do ranking
@@ -75,34 +99,42 @@ int main()
     //Variável para estados do jogo
     int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
 
+    // Variáveis de posição e tamanho do jogador
+
+
+
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
-        {
-        //Atualizar
-
+    {
+        // Desenha o chão
         //Música menu
         UpdateMusicStream(ostmenu);
 
         //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão jogar
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaojogar)){
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaojogar))
+        {
             estadojogo = 1; // Mudar para o estado de jogo
             StopMusicStream(ostmenu); //Para a música ao mudar para a gameplay
         };
 
         //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
-         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoranking)){
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoranking))
+        {
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
             PlayMusicStream(ostranking);//Começa a tocar a música do ranking
         };
 
         //Lógica do Menu
-        if (estadojogo == 0){
+        if (estadojogo == 0)
+        {
             //Atualizar a animação do menu
             menuTimer++;
-            if(menuTimer >= menuFrameSpeed){
+            if(menuTimer >= menuFrameSpeed)
+            {
                 menuFrame++;
-                if (menuFrame > 2){
+                if (menuFrame > 2)
+                {
                     menuFrame = 0;
                 }
                 menuTimer = 0;
@@ -132,24 +164,29 @@ int main()
             EndDrawing();
         }
         //Muda para a gameplay
-        else if(estadojogo == 1){
+        else if(estadojogo == 1)
+        {
             //Controle do pulo
-            if (IsKeyPressed(KEY_SPACE)){
+            if (IsKeyPressed(KEY_SPACE))
+            {
                 speedpassaro = jumpForce;
             }
 
             //Gravidade
-            if (speedpassaro < 0){
+            if (speedpassaro < 0)
+            {
                 //Subida
                 speedpassaro += gravidade * gravidade;
             }
-            else{
+            else
+            {
                 //Descida
                 speedpassaro += gravidade * gravidadedobro;
             }
 
             //Limitação da velocidade de descida
-            if (speedpassaro > 10.0f){
+            if (speedpassaro > 10.0f)
+            {
                 speedpassaro = 12.0f;
             }
 
@@ -158,9 +195,11 @@ int main()
 
             //Asas batendo
             timer ++;
-            if (timer >= frameSpeed){
+            if (timer >= frameSpeed)
+            {
                 frameAtual++;
-                if (frameAtual > 2){
+                if (frameAtual > 2)
+                {
                     frameAtual = 0;
                 }
                 timer = 0;
@@ -170,20 +209,24 @@ int main()
             groundX1 -= groundSpeed;
             groundX2 -= groundSpeed;
 
-            if (groundX1 <= -screenWidth){
+            if (groundX1 <= -screenWidth)
+            {
                 groundX1 = screenWidth;
             }
-            if (groundX2 <= -screenWidth){
+            if (groundX2 <= -screenWidth)
+            {
                 groundX2 = screenWidth;
             }
 
             //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
             float rotation = 0.0f;
-            if (speedpassaro < 0){
+            if (speedpassaro < 0)
+            {
                 rotation = -maxrotation - 10; //* DEG2RAD;
                 rotationStartTime = GetTime();
             }
-            else if (speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay){
+            else if (speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay)
+            {
                 rotation = maxrotation + 20; //* DEG2RAD;
             }
 
@@ -200,25 +243,72 @@ int main()
             DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
             // Asas batendo
-        switch(frameAtual){
+            switch(frameAtual)
+            {
             case 0:
-                DrawTexturePro(asa1, (Rectangle){0, 0, asa1.width, asa1.height}, (Rectangle){posX, posY, asa1.width, asa1.height}, (Vector2){asa1.width / 2, asa1.height / 2}, rotation, WHITE);
+                DrawTexturePro(asa1, (Rectangle)
+                {
+                    0, 0, asa1.width, asa1.height
+                }, (Rectangle)
+                {
+                    posX, posY, asa1.width, asa1.height
+                }, (Vector2)
+                {
+                    asa1.width / 2, asa1.height / 2
+                }, rotation, WHITE);
                 break;
             case 1:
-                DrawTexturePro(asa2, (Rectangle){0, 0, asa2.width, asa2.height}, (Rectangle){posX, posY, asa2.width, asa2.height}, (Vector2){asa2.width / 2, asa2.height / 2}, rotation, WHITE);
+                DrawTexturePro(asa2, (Rectangle)
+                {
+                    0, 0, asa2.width, asa2.height
+                }, (Rectangle)
+                {
+                    posX, posY, asa2.width, asa2.height
+                }, (Vector2)
+                {
+                    asa2.width / 2, asa2.height / 2
+                }, rotation, WHITE);
                 break;
             case 2:
-                DrawTexturePro(asa3, (Rectangle){0, 0, asa3.width, asa3.height}, (Rectangle){posX, posY, asa3.width, asa3.height}, (Vector2){asa3.width / 2, asa3.height / 2}, rotation, WHITE);
+                DrawTexturePro(asa3, (Rectangle)
+                {
+                    0, 0, asa3.width, asa3.height
+                }, (Rectangle)
+                {
+                    posX, posY, asa3.width, asa3.height
+                }, (Vector2)
+                {
+                    asa3.width / 2, asa3.height / 2
+                }, rotation, WHITE);
                 break;
             }
 
             //Futuros elementos
 
 
+            //coisas relacionadas às colisões
+
+            Rectangle player = {posX-30, posY-10, 80, 20};
+            bool onFloor = CheckCollisionRecs(player, Floor);
+            bool onRoof = CheckCollisionRecs(player, Roof);
+            //condicional de colisão com o teto
+            if(onRoof){
+
+                speedpassaro = 1;
+
+            }
+            //condicional de colisão com o chão
+            if(onFloor)
+            {
+                posY = 300;
+            }
+
             EndDrawing();
         }
 
-        else if(estadojogo == 2){
+
+        else if(estadojogo == 2)
+        {
             DrawTexture(ranking,0,0, WHITE);
         }
     }
