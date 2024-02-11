@@ -83,11 +83,14 @@ int main()
     //Carregar música do menu
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
     PlayMusicStream(ostmenu);
-    const float volumemenu = 0.3f;
+    const float volumemenu = 0.2f;
     SetMusicVolume(ostmenu, volumemenu);
 
     //Carregar música do ranking
     Music ostranking = LoadMusicStream("./Recursos/ostranking.mp3");
+    PlayMusicStream(ostranking);
+    const float volumeranking = 1.0f;
+    SetMusicVolume(ostranking, volumeranking);
 
 
     //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
@@ -122,7 +125,7 @@ int main()
         {
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
-            PlayMusicStream(ostranking);//Começa a tocar a música do ranking
+            //PlayMusicStream(ostranking);//Começa a tocar a música do ranking
         };
 
         //Lógica do Menu
@@ -163,6 +166,19 @@ int main()
 
             EndDrawing();
         }
+
+        //Mudar para a tela de ranking
+        else if(estadojogo == 2){
+            //Tocar a música do ranking
+            PlayMusicStream(ostranking);
+            UpdateMusicStream(ostranking);
+
+            //Desenhar a textura do ranking
+            BeginDrawing();
+            DrawTexture(ranking, 0, 0, WHITE);
+            EndDrawing();
+        }
+
         //Muda para a gameplay
         else if(estadojogo == 1)
         {
@@ -306,11 +322,9 @@ int main()
             EndDrawing();
         }
 
-
-        else if(estadojogo == 2)
-        {
+        /*else if(estadojogo == 2){
             DrawTexture(ranking,0,0, WHITE);
-        }
+        }*/
     }
 
     //Limpar e fechar
