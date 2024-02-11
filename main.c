@@ -96,7 +96,6 @@ int main()
          if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoranking)){
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
-            //PlayMusicStream(ostranking);//Começa a tocar a música do ranking
         };
 
         //Lógica do Menu
