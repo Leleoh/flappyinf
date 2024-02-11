@@ -18,6 +18,9 @@ int main()
     Texture2D menu2 = LoadTexture("./Recursos/menu2.png");
     Texture2D menu3 = LoadTexture("./Recursos/menu3.png");
 
+    //Carregar o plano de fundo do ranking
+    Texture2D ranking = LoadTexture("./Recursos/ranking.png");
+
     //Variáveis de controle de animação do menu
     int menuFrame = 0;
     int menuTimer = 0;
@@ -56,8 +59,12 @@ int main()
     //Carregar música do menu
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
     PlayMusicStream(ostmenu);
-    const float volumemenu = 1.0f;
+    const float volumemenu = 0.5f;
     SetMusicVolume(ostmenu, volumemenu);
+
+    //Carregar música do ranking
+    Music ostranking = LoadMusicStream("./Recursos/ostranking.mp3");
+
 
     //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
     Rectangle botaojogar = { screenWidth / 2 - 290, screenHeight / 2 - 50, 200, 100 };
@@ -66,7 +73,7 @@ int main()
     Rectangle botaosair = { screenWidth / 2 + 15, screenHeight / 2 + 125, 200, 30 };
 
     //Variável para estados do jogo
-    int estadojogo = 0; //0 para MENU, 1 para JOGO
+    int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
 
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
@@ -76,10 +83,17 @@ int main()
         //Música menu
         UpdateMusicStream(ostmenu);
 
-        //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão
+        //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão jogar
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaojogar)){
             estadojogo = 1; // Mudar para o estado de jogo
             StopMusicStream(ostmenu); //Para a música ao mudar para a gameplay
+        };
+
+        //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
+         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoranking)){
+            estadojogo = 2; // Mudar para o estado de jogo 2
+            StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
+            PlayMusicStream(ostranking);//Começa a tocar a música do ranking
         };
 
         //Lógica do Menu
@@ -163,8 +177,6 @@ int main()
                 groundX2 = screenWidth;
             }
 
-
-
             //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
             float rotation = 0.0f;
             if (speedpassaro < 0){
@@ -187,7 +199,6 @@ int main()
             DrawTexture(background, groundX1, screenHeight - background.height, WHITE);
             DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
-            //Asas batendo
             // Asas batendo
         switch(frameAtual){
             case 0:
@@ -201,12 +212,14 @@ int main()
                 break;
             }
 
-
             //Futuros elementos
 
 
             EndDrawing();
+        }
 
+        else if(estadojogo == 2){
+            DrawTexture(ranking,0,0, WHITE);
         }
     }
 
