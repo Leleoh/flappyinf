@@ -2,6 +2,9 @@
 
 int main()
 {
+    //Inicializar dispositivo de áudio
+    InitAudioDevice();
+
     //Inicialização da janela
     const int screenWidth = 1200;
     const int screenHeight = 800;
@@ -50,6 +53,18 @@ int main()
     float groundX2 = screenWidth;
     float groundSpeed = 1.0f;
 
+    //Carregar música do menu
+    Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
+    PlayMusicStream(ostmenu);
+    const float volumemenu = 1.0f;
+    SetMusicVolume(ostmenu, volumemenu);
+
+    //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
+    Rectangle botaojogar = { screenWidth / 2 - 290, screenHeight / 2 - 50, 200, 100 };
+    Rectangle botaodificuldade = { screenWidth / 2 - 290, screenHeight / 2 + 125, 200, 30 };
+    Rectangle botaoranking = { screenWidth / 2 + 15, screenHeight / 2 - 50, 200, 100 };
+    Rectangle botaosair = { screenWidth / 2 + 15, screenHeight / 2 + 125, 200, 30 };
+
     //Variável para estados do jogo
     int estadojogo = 0; //0 para MENU, 1 para JOGO
 
@@ -57,17 +72,17 @@ int main()
     while(!WindowShouldClose()) //Detecta o fechamento da janela
         {
         //Atualizar
-        //Verificação da entrada de teclado para mudar o estado do jogo entre menu e gameplay
-        if (IsKeyPressed(KEY_ENTER)){
-            //Alternar entre MENU e JOGO
-            if(estadojogo == 0){
-                estadojogo = 1;
-            }
-            //Manter
-            else{
-                estadojogo = 0;
-            }
-        }
+
+        //Música menu
+        UpdateMusicStream(ostmenu);
+
+        //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaojogar)){
+            estadojogo = 1; // Mudar para o estado de jogo
+            StopMusicStream(ostmenu); //Para a música ao mudar para a gameplay
+        };
+
+        //Lógica do Menu
         if (estadojogo == 0){
             //Atualizar a animação do menu
             menuTimer++;
@@ -94,8 +109,15 @@ int main()
                 DrawTexture(menu3, 0, 0, WHITE);
                 break;
             }
+            //Desenhar retângulo (TIRAR DEPOIS, APENAS PARA REFERÊNCIA)
+            DrawRectangleLines(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height, BLACK);
+            DrawRectangleLines(botaoranking.x, botaoranking.y, botaoranking.width, botaoranking.height, BLACK);
+            DrawRectangleLines(botaodificuldade.x, botaodificuldade.y, botaodificuldade.width, botaodificuldade.height, BLACK);
+            DrawRectangleLines(botaosair.x, botaosair.y, botaosair.width, botaosair.height, BLACK);
+
             EndDrawing();
         }
+        //Muda para a gameplay
         else if(estadojogo == 1){
             //Controle do pulo
             if (IsKeyPressed(KEY_SPACE)){
