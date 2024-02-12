@@ -121,6 +121,7 @@ int main()
     Rectangle botaojogar = { screenWidth / 2 - 290, screenHeight / 2 - 50, 200, 100 };
     Rectangle botaodificuldade = { screenWidth / 2 - 290, screenHeight / 2 + 125, 200, 30 };
     Rectangle botaoranking = { screenWidth / 2 + 15, screenHeight / 2 - 50, 200, 100 };
+    Rectangle botaorankingvoltar = { screenWidth / 2 + 360, screenHeight / 2 + 200, 200, 80 };
     Rectangle botaosair = { screenWidth / 2 + 15, screenHeight / 2 + 125, 200, 30 };
 
     //Variável para estados do jogo
@@ -155,7 +156,6 @@ int main()
         {
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
-            //PlayMusicStream(ostranking);//Começa a tocar a música do ranking
         };
 
         //Lógica do Menu
@@ -189,10 +189,10 @@ int main()
                 break;
             }
             //Desenhar retângulo (TIRAR DEPOIS, APENAS PARA REFERÊNCIA)
-            DrawRectangleLines(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height, BLACK);
-            DrawRectangleLines(botaoranking.x, botaoranking.y, botaoranking.width, botaoranking.height, BLACK);
-            DrawRectangleLines(botaodificuldade.x, botaodificuldade.y, botaodificuldade.width, botaodificuldade.height, BLACK);
-            DrawRectangleLines(botaosair.x, botaosair.y, botaosair.width, botaosair.height, BLACK);
+            //DrawRectangleLines(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height, BLACK);
+            //DrawRectangleLines(botaoranking.x, botaoranking.y, botaoranking.width, botaoranking.height, BLACK);
+            //DrawRectangleLines(botaodificuldade.x, botaodificuldade.y, botaodificuldade.width, botaodificuldade.height, BLACK);
+            //DrawRectangleLines(botaosair.x, botaosair.y, botaosair.width, botaosair.height, BLACK);
 
             EndDrawing();
         }
@@ -206,6 +206,17 @@ int main()
             //Desenhar a textura do ranking
             BeginDrawing();
             DrawTexture(ranking, 0, 0, WHITE);
+
+            //RETANGULO VISUAL VOLTAR TIRAR DEPOIS
+            //DrawRectangleLines(botaorankingvoltar.x, botaorankingvoltar.y, botaorankingvoltar.width, botaorankingvoltar.height, BLACK);
+
+            //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaorankingvoltar))
+            {
+                estadojogo = 0; // Mudar para o estado de jogo 0 (MENU)
+                PlayMusicStream(ostmenu); //Volta a tocar a música do ranking
+            };
+
             EndDrawing();
         }
 
@@ -379,9 +390,7 @@ int main()
             EndDrawing();
         }
 
-        /*else if(estadojogo == 2){
-            DrawTexture(ranking,0,0, WHITE);
-        }*/
+
     }
 
     //Limpar e fechar
