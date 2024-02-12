@@ -46,8 +46,8 @@ int main()
     int frameSpeed = 10;
 
     //Variáveis de posição e velocidade do pássaro (X, Y)
-    float posX = 100.0f;
-    float posY = 100.0f;
+    float posX = 250.0f;
+    float posY = screenHeight/2;
     float speedpassaro = 0.0f;
     const float gravidade = 0.6f;
     const float gravidadedobro = 1.2f;
@@ -58,7 +58,7 @@ int main()
 
     //variáveis relacionadas ao chão
     int FloorX = 0;
-    int FloorY = screenHeight-100;
+    int FloorY = screenHeight - 50;
     int FloorW = screenWidth;
     int FloorH = 20;
     //variáveis relacionadas ao teto
@@ -78,7 +78,7 @@ int main()
     //Variáveis de posição e controle do chão
     float groundX1 = 0.0f;
     float groundX2 = screenWidth;
-    float groundSpeed = 1.0f;
+    float groundSpeed = 2.5f;
 
     //Carregar música do menu
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
@@ -101,6 +101,8 @@ int main()
     Rectangle botaosair = { screenWidth / 2 + 15, screenHeight / 2 + 125, 200, 30 };
 
     //Variável para estados do jogo
+    bool fimdejogo = false; //Controle para verificar se o pássaro bateu em algo e perdeu
+    bool jogoiniciado = false; //Controle para verificar se o jogo já começou (Aperto da barra de espaço)
     int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
 
     // Variáveis de posição e tamanho do jogador
@@ -110,7 +112,6 @@ int main()
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
-        // Desenha o chão
         //Música menu
         UpdateMusicStream(ostmenu);
 
@@ -127,6 +128,12 @@ int main()
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
         };
+        //Fechar o jogo ao botão sair ser pressionado
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaosair))
+            {
+                CloseWindow(); // Fechar o jogo
+                return 0;
+            }
 
         //Lógica do Menu
         if (estadojogo == 0)
@@ -145,6 +152,7 @@ int main()
 
             BeginDrawing();
             ClearBackground(RAYWHITE);
+
             //Desenhar a textura do menu de acordo com o frame atual
             switch (menuFrame)
             {
@@ -158,12 +166,6 @@ int main()
                 DrawTexture(menu3, 0, 0, WHITE);
                 break;
             }
-            //Desenhar retângulo (TIRAR DEPOIS, APENAS PARA REFERÊNCIA)
-            //DrawRectangleLines(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height, BLACK);
-            //DrawRectangleLines(botaoranking.x, botaoranking.y, botaoranking.width, botaoranking.height, BLACK);
-            //DrawRectangleLines(botaodificuldade.x, botaodificuldade.y, botaodificuldade.width, botaodificuldade.height, BLACK);
-            //DrawRectangleLines(botaosair.x, botaosair.y, botaosair.width, botaosair.height, BLACK);
-
             EndDrawing();
         }
 
@@ -177,14 +179,12 @@ int main()
             BeginDrawing();
             DrawTexture(ranking, 0, 0, WHITE);
 
-            //RETANGULO VISUAL VOLTAR TIRAR DEPOIS
-            //DrawRectangleLines(botaorankingvoltar.x, botaorankingvoltar.y, botaorankingvoltar.width, botaorankingvoltar.height, BLACK);
-
             //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaorankingvoltar))
             {
                 estadojogo = 0; // Mudar para o estado de jogo 0 (MENU)
-                PlayMusicStream(ostmenu); //Volta a tocar a música do ranking
+                StopMusicStream(ostranking);//Pausa a música do ranking
+                PlayMusicStream(ostmenu); //Volta a tocar a música do menu
             };
 
             EndDrawing();
@@ -196,42 +196,45 @@ int main()
             //Controle do pulo
             if (IsKeyPressed(KEY_SPACE))
             {
+                jogoiniciado = true;
                 speedpassaro = jumpForce;
             }
 
-            //Gravidade
-            if (speedpassaro < 0)
-            {
-                //Subida
-                speedpassaro += gravidade * gravidade;
-            }
-            else
-            {
-                //Descida
-                speedpassaro += gravidade * gravidadedobro;
-            }
+            if (jogoiniciado){
 
-            //Limitação da velocidade de descida
-            if (speedpassaro > 10.0f)
-            {
-                speedpassaro = 12.0f;
-            }
-
-            //Movimento do pássaro
-            posY += speedpassaro;
-
-            //Asas batendo
-            timer ++;
-            if (timer >= frameSpeed)
-            {
-                frameAtual++;
-                if (frameAtual > 2)
+                //Gravidade
+                if (speedpassaro < 0)
                 {
-                    frameAtual = 0;
+                    //Subida
+                    speedpassaro += gravidade * gravidade;
                 }
-                timer = 0;
-            }
+                else
+                {
+                    //Descida
+                    speedpassaro += gravidade * gravidadedobro;
+                }
 
+                //Limitação da velocidade de descida
+                if (speedpassaro > 10.0f)
+                {
+                    speedpassaro = 12.0f;
+                }
+
+                //Movimento do pássaro
+                posY += speedpassaro;
+
+                //Asas batendo
+                timer ++;
+                if (timer >= frameSpeed)
+                {
+                    frameAtual++;
+                    if (frameAtual > 2)
+                    {
+                        frameAtual = 0;
+                    }
+                    timer = 0;
+                }
+            }
             //Movimento do chão
             groundX1 -= groundSpeed;
             groundX2 -= groundSpeed;
@@ -249,12 +252,12 @@ int main()
             float rotation = 0.0f;
             if (speedpassaro < 0)
             {
-                rotation = -maxrotation - 10; //* DEG2RAD;
+                rotation = -maxrotation - 10;
                 rotationStartTime = GetTime();
             }
             else if (speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay)
             {
-                rotation = maxrotation + 20; //* DEG2RAD;
+                rotation = maxrotation + 20;
             }
 
 
@@ -270,64 +273,91 @@ int main()
             DrawTexture(background, groundX2, screenHeight - background.height, WHITE);
 
             // Asas batendo
-            switch(frameAtual)
-            {
-            case 0:
-                DrawTexturePro(asa1, (Rectangle)
+            if(!jogoiniciado){
+                timer++;
+                if (timer >= frameSpeed)
                 {
-                    0, 0, asa1.width, asa1.height
-                }, (Rectangle)
+                    frameAtual++;
+                    if (frameAtual > 2)
+                    {
+                        frameAtual = 0;
+                    }
+                    timer = 0;
+                }
+                switch(frameAtual)
                 {
-                    posX, posY, asa1.width, asa1.height
-                }, (Vector2)
+                case 0:
+                    DrawTexturePro(asa1, (Rectangle)
+                    {
+                        0, 0, asa1.width, asa1.height
+                    }, (Rectangle)
+                    {
+                        posX, posY, asa1.width, asa1.height
+                    }, (Vector2)
+                    {
+                        asa1.width / 2, asa1.height / 2
+                    }, rotation, WHITE);
+                    break;
+                case 1:
+                    DrawTexturePro(asa2, (Rectangle)
+                    {
+                        0, 0, asa2.width, asa2.height
+                    }, (Rectangle)
+                    {
+                        posX, posY, asa2.width, asa2.height
+                    }, (Vector2)
+                    {
+                        asa2.width / 2, asa2.height / 2
+                    }, rotation, WHITE);
+                    break;
+                case 2:
+                    DrawTexturePro(asa3, (Rectangle)
+                    {
+                        0, 0, asa3.width, asa3.height
+                    }, (Rectangle)
+                    {
+                        posX, posY, asa3.width, asa3.height
+                    }, (Vector2)
+                    {
+                        asa3.width / 2, asa3.height / 2
+                    }, rotation, WHITE);
+                    break;
+                }
+            }
+            else{
+                // Asas batendo
+                switch (frameAtual)
                 {
-                    asa1.width / 2, asa1.height / 2
-                }, rotation, WHITE);
-                break;
-            case 1:
-                DrawTexturePro(asa2, (Rectangle)
-                {
-                    0, 0, asa2.width, asa2.height
-                }, (Rectangle)
-                {
-                    posX, posY, asa2.width, asa2.height
-                }, (Vector2)
-                {
-                    asa2.width / 2, asa2.height / 2
-                }, rotation, WHITE);
-                break;
-            case 2:
-                DrawTexturePro(asa3, (Rectangle)
-                {
-                    0, 0, asa3.width, asa3.height
-                }, (Rectangle)
-                {
-                    posX, posY, asa3.width, asa3.height
-                }, (Vector2)
-                {
-                    asa3.width / 2, asa3.height / 2
-                }, rotation, WHITE);
-                break;
+                case 0:
+                    DrawTexturePro(asa1, (Rectangle){0, 0, asa1.width, asa1.height}, (Rectangle){posX, posY, asa1.width, asa1.height}, (Vector2){asa1.width / 2, asa1.height / 2}, rotation, WHITE);
+                    break;
+                case 1:
+                    DrawTexturePro(asa2, (Rectangle){0, 0, asa2.width, asa2.height}, (Rectangle){posX, posY, asa2.width, asa2.height}, (Vector2){asa2.width / 2, asa2.height / 2}, rotation, WHITE);
+                    break;
+                case 2:
+                    DrawTexturePro(asa3, (Rectangle){0, 0, asa3.width, asa3.height}, (Rectangle){posX, posY, asa3.width, asa3.height}, (Vector2){asa3.width / 2, asa3.height / 2}, rotation, WHITE);
+                    break;
+                }
             }
 
             //Futuros elementos
 
 
-            //coisas relacionadas às colisões
+            //Coisas relacionadas às colisões
 
             Rectangle player = {posX-30, posY-10, 80, 20};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
-            //condicional de colisão com o teto
+            //Condicional de colisão com o teto
             if(onRoof){
 
                 speedpassaro = 1;
 
             }
-            //condicional de colisão com o chão
+            //Condicional de colisão com o chão
             if(onFloor)
             {
-                posY = 300;
+                posY = 0;
             }
 
             EndDrawing();
