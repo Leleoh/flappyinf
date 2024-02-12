@@ -1,7 +1,21 @@
 #include <raylib.h>
+#include <time.h>
+#include <stdlib.h>
+
+
+int random(int min, int max)
+{
+    return min + (rand()%(max-min+1)); //retorna um valor entre min e max
+}
+
+
+
+
 
 int main()
 {
+
+    clock_t tempo, t;
 
 
     //Inicializar dispositivo de áudio
@@ -66,13 +80,23 @@ int main()
     int RoofY = 0;
     int RoofW = screenWidth;
     int RoofH = 3;
+    //variáveis do cano de cima
+    int tube1X = screenWidth;
+    int tube1Y = 0;
+    int tube1W = 102;
+    int tube1H = 450;
+
+    int tube2X = screenWidth-20;
+    int tube2Y = 450;
+    int tube2W = 102;
+    int tube2H = 450;
 
     //colisões
     Rectangle Floor = {FloorX, FloorY, FloorW, FloorH};
     bool collision;
     Rectangle Roof = {RoofX, RoofY, RoofW, RoofH};
-
-
+    Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
+    Rectangle tubebottom = {tube2X, tube2Y, tube2W, tube2H};
 
 
     //Variáveis de posição e controle do chão
@@ -107,11 +131,20 @@ int main()
 
     // Variáveis de posição e tamanho do jogador
 
-
+    t = clock();
 
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
+<<<<<<< HEAD
+=======
+
+
+        tempo = (int)(clock()-t)/1000;
+
+
+
+>>>>>>> 0e8c9377568ed6740159cf0c8c46832aa245fb0f
         //Música menu
         UpdateMusicStream(ostmenu);
 
@@ -119,6 +152,7 @@ int main()
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaojogar))
         {
             estadojogo = 1; // Mudar para o estado de jogo
+            int movimento = 1;
             StopMusicStream(ostmenu); //Para a música ao mudar para a gameplay
         };
 
@@ -345,20 +379,56 @@ int main()
 
             //Coisas relacionadas às colisões
 
-            Rectangle player = {posX-30, posY-10, 80, 20};
+            Rectangle player = {posX-38, posY-75, 75, 65};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
+<<<<<<< HEAD
             //Condicional de colisão com o teto
+=======
+
+            tube1X = tube1X -15;
+            tube2X = tube2X -15;
+
+            if(tube1X < -102){
+
+                tube1X = screenWidth;
+                tube1Y = random(-350, 0);
+            }
+
+
+
+            Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
+            Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};
+            bool onTube = CheckCollisionRecs(player, tubetop);
+            bool onTube2 = CheckCollisionRecs(player, tubebottom);
+
+                        //condicional de colisão com o teto
+>>>>>>> 0e8c9377568ed6740159cf0c8c46832aa245fb0f
             if(onRoof){
 
                 speedpassaro = 1;
 
             }
+<<<<<<< HEAD
             //Condicional de colisão com o chão
             if(onFloor)
+=======
+            //condicional de colisão com o chão
+            if(onFloor ||onTube || onTube2)
+>>>>>>> 0e8c9377568ed6740159cf0c8c46832aa245fb0f
             {
                 posY = 0;
             }
+
+
+
+
+            DrawRectangleRec(tubetop, GOLD);
+            DrawRectangleRec(tubebottom, GOLD);
+            DrawRectangleRec(player, PURPLE);
+
+
+
 
             EndDrawing();
         }
