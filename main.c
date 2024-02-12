@@ -63,11 +63,11 @@ int main()
     float posX = 100.0f;
     float posY = 100.0f;
     float speedpassaro = 0.0f;
-    const float gravidade = 0.6f;
+    const float gravidade = 0.8f;
     const float gravidadedobro = 1.2f;
-    const float jumpForce = -10.0f;
+    const float jumpForce = -13.5f;
     const float maxrotation = 5.0f;
-    const float rotationDelay = 0.03f;
+    const float rotationDelay = 0.05f;
     float rotationStartTime = 0.0f;
 
     //variáveis relacionadas ao chão
@@ -348,9 +348,8 @@ int main()
             Rectangle player = {posX-38, posY-75, 75, 65};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
-
-            tube1X = tube1X -15;
-            tube2X = tube2X -15;
+            //velocidade dos canoas
+            tube1X = tube1X -22;
 
             if(tube1X < -102){
 
