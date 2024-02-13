@@ -98,7 +98,7 @@ int main()
     Rectangle tubebottom = {tube2X, tube2Y, tube2W, tube2H};
 
 
-    //Variáveis de posição e controle do chão
+    //Variáveis de posição e controle do chão (Efeito do chão andar)
     float groundX1 = 0.0f;
     float groundX2 = screenWidth;
     float groundSpeed = 1.0f;
@@ -115,6 +115,12 @@ int main()
     const float volumeranking = 1.0f;
     SetMusicVolume(ostranking, volumeranking);
 
+    //Carregar efeitos sonoros
+    Sound pontos = LoadSound("./Recursos/point.wav");
+    Sound transicao = LoadSound("./Recursos/swoosh.wav");
+    Sound bateu = LoadSound("./Recursos/hit.wav");
+    Sound somasas = LoadSound("./Recursos/wing.wav");
+
 
     //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
     Rectangle botaojogar = { screenWidth / 2 - 290, screenHeight / 2 - 50, 200, 100 };
@@ -127,8 +133,7 @@ int main()
     int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
     int score = 0;
 
-
-
+    //Carregar texturas
     Texture2D Tubocima = LoadTexture("./Recursos/canocima.png");
     Texture2D Tubobaixo = LoadTexture("./Recursos/canobaixo.png");
     Texture2D Telafim = LoadTexture("./Recursos/telafim.png");
@@ -146,6 +151,7 @@ int main()
             estadojogo = 1; // Mudar para o estado de jogo
             int movimento = 1;
             StopMusicStream(ostmenu); //Para a música ao mudar para a gameplay
+            PlaySound(transicao);
         };
 
         //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
@@ -226,10 +232,13 @@ int main()
         //Muda para a gameplay
         else if(estadojogo == 1)
         {
+
             //Controle do pulo
             if (IsKeyPressed(KEY_SPACE))
             {
                 speedpassaro = jumpForce;
+                PlaySound(somasas);
+
             }
 
             //Gravidade
@@ -351,36 +360,36 @@ int main()
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
 
-            //velocidade dos canoas
+            //velocidade dos canos
             if(score < 450)
             {
 
-                tube1X = tube1X -15;
+                tube1X = tube1X -11;
             }
             else if(score <= 1000 && score >= 450)
             {
 
-                tube1X = tube1X -23;
+                tube1X = tube1X -17;
 
             }
 
             else if(score > 1000)
             {
 
-                tube1X = tube1X -27;
+                tube1X = tube1X -22;
 
             }
 
 
 
-            //reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
+            //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
             if(tube1X < -102)
             {
 
                 tube1X = screenWidth;
                 tube1Y = random(-350, 0);
-
                 score = score + 50;
+                PlaySound(pontos);
 
 
             }
@@ -403,6 +412,7 @@ int main()
             //condicional de colisão com o chão
             if(onFloor ||onTube || onTube2)
             {
+                PlaySound(bateu);
                 //reset de todas as variáveis
                 FloorX = 0;
                 FloorY = screenHeight-100;
@@ -428,17 +438,17 @@ int main()
                 }
 
 
-                //tela de derrota
+                //Tela de derrota
         while(!(IsKeyPressed(KEY_SPACE))){
                 BeginDrawing();
                 ClearBackground(RAYWHITE);
+                PlayMusicStream(ostmenu);
                 DrawTexture(background, 0, 0, WHITE);
                 DrawTexture(Telafim, 0, 0, WHITE);
                 DrawText(TextFormat("%d", score), (screenWidth/2)-50, (screenWidth/2)-230,40, GREEN);
                 DrawText(TextFormat("%d", recorde), (screenWidth/2)-50, (screenWidth/2)-160,40, BLUE);
                 EndDrawing();
             }
-
             estadojogo = 0;
             score = 0;
 
