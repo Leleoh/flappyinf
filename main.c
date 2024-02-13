@@ -131,6 +131,10 @@ int main()
 
     t = clock();
 
+
+    Texture2D Tubocima = LoadTexture("./Recursos/canocima.png");
+    Texture2D Tubobaixo = LoadTexture("./Recursos/canobaixo.png");
+
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
@@ -373,14 +377,41 @@ int main()
             //condicional de colisão com o chão
             if(onFloor ||onTube || onTube2)
             {
-                posY = 300;
+                //reset de todas as variáveis
+                FloorX = 0;
+                FloorY = screenHeight-100;
+                FloorW = screenWidth;
+                FloorH = 20;
+                RoofX = 0;
+                RoofY = 0;
+                RoofW = screenWidth;
+                RoofH = 3;
+                tube1X = screenWidth;
+                tube1Y = 0;
+                tube1W = 102;
+                tube1H = 450;
+                tube2X = screenWidth-20;
+                tube2Y = 450;
+                tube2W = 102;
+                tube2H = 450;
+                posX = 100.0f;
+                posY = 100.0f;
+
+
+
+
+
+
+                estadojogo = 0;
+
             }
 
 
 
-
-            DrawRectangleRec(tubetop, GOLD);
-            DrawRectangleRec(tubebottom, GOLD);
+            DrawTexture(Tubocima, tube1X, tube1Y, WHITE);
+            DrawTexture(Tubobaixo, tube1X, tube1Y+450+200, WHITE);
+           // DrawRectangleRec(tubetop, GOLD);
+           // DrawRectangleRec(tubebottom, GOLD);
             DrawRectangleRec(player, PURPLE);
 
 
