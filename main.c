@@ -11,11 +11,10 @@ int random(int min, int max)
 
 
 
-
 int main()
 {
 
-    clock_t tempo, t;
+    int recorde = 0;
 
 
     //Inicializar dispositivo de áudio
@@ -126,20 +125,20 @@ int main()
 
     //Variável para estados do jogo
     int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
-
     int score = 0;
-    t = clock();
+
 
 
     Texture2D Tubocima = LoadTexture("./Recursos/canocima.png");
     Texture2D Tubobaixo = LoadTexture("./Recursos/canobaixo.png");
+    Texture2D Telafim = LoadTexture("./Recursos/telafim.png");
 
     //Loop Principal
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
 
 
-        tempo = (int)(clock()-t)/1000;
+
 
 
 
@@ -399,6 +398,8 @@ int main()
                 speedpassaro = 1;
 
             }
+
+
             //condicional de colisão com o chão
             if(onFloor ||onTube || onTube2)
             {
@@ -421,17 +422,28 @@ int main()
                 tube2H = 450;
                 posX = 100.0f;
                 posY = 100.0f;
-                score = 0;
+
+                    if(recorde < score){
+                    recorde = score;
+                }
 
 
-                estadojogo = 0;
-
+                //tela de derrota
+        while(!(IsKeyPressed(KEY_SPACE))){
+                BeginDrawing();
+                ClearBackground(RAYWHITE);
+                DrawTexture(background, 0, 0, WHITE);
+                DrawTexture(Telafim, 0, 0, WHITE);
+                DrawText(TextFormat("%d", score), (screenWidth/2)-50, (screenWidth/2)-230,40, GREEN);
+                DrawText(TextFormat("%d", recorde), (screenWidth/2)-50, (screenWidth/2)-160,40, BLUE);
+                EndDrawing();
             }
 
+            estadojogo = 0;
+            score = 0;
 
 
-
-
+            }
 
 
             DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
