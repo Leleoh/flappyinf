@@ -127,8 +127,7 @@ int main()
     //Variável para estados do jogo
     int estadojogo = 0; //0 para MENU, 1 para JOGO, 2 para RANKING
 
-    // Variáveis de posição e tamanho do jogador
-
+    int score = 0;
     t = clock();
 
 
@@ -202,7 +201,8 @@ int main()
         }
 
         //Mudar para a tela de ranking
-        else if(estadojogo == 2){
+        else if(estadojogo == 2)
+        {
             //Tocar a música do ranking
             PlayMusicStream(ostranking);
             UpdateMusicStream(ostranking);
@@ -348,19 +348,43 @@ int main()
 
 
             //coisas relacionadas às colisões
-
-            Rectangle player = {posX-38, posY-75, 75, 65};
+            Rectangle player = {posX-38, posY-65, 75, 50};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
-            //velocidade dos canoas
-            tube1X = tube1X -22;
 
-            if(tube1X < -102){
+            //velocidade dos canoas
+            if(score < 450)
+            {
+
+                tube1X = tube1X -15;
+            }
+            else if(score <= 1000 && score >= 450)
+            {
+
+                tube1X = tube1X -23;
+
+            }
+
+            else if(score > 1000)
+            {
+
+                tube1X = tube1X -27;
+
+            }
+
+
+
+            //reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
+            if(tube1X < -102)
+            {
 
                 tube1X = screenWidth;
                 tube1Y = random(-350, 0);
-            }
 
+                score = score + 50;
+
+
+            }
 
 
             Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
@@ -368,8 +392,9 @@ int main()
             bool onTube = CheckCollisionRecs(player, tubetop);
             bool onTube2 = CheckCollisionRecs(player, tubebottom);
 
-                        //condicional de colisão com o teto
-            if(onRoof){
+            //condicional de colisão com o teto
+            if(onRoof)
+            {
 
                 speedpassaro = 1;
 
@@ -396,10 +421,7 @@ int main()
                 tube2H = 450;
                 posX = 100.0f;
                 posY = 100.0f;
-
-
-
-
+                score = 0;
 
 
                 estadojogo = 0;
@@ -408,12 +430,16 @@ int main()
 
 
 
-            DrawTexture(Tubocima, tube1X, tube1Y, WHITE);
-            DrawTexture(Tubobaixo, tube1X, tube1Y+450+200, WHITE);
-           // DrawRectangleRec(tubetop, GOLD);
-           // DrawRectangleRec(tubebottom, GOLD);
-            DrawRectangleRec(player, PURPLE);
 
+
+
+
+            DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
+            DrawTexture(Tubobaixo, tube1X, tube1Y+450+200-20, WHITE);
+            // DrawRectangleRec(tubetop, GOLD);
+            // DrawRectangleRec(tubebottom, GOLD);
+            DrawRectangleRec(player, PURPLE);
+            DrawText(TextFormat("Score: %d", score), 80, 0, 50, YELLOW);
 
 
 
