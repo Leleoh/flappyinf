@@ -137,11 +137,6 @@ int main()
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
 
-
-
-
-
-
         //Música menu
         UpdateMusicStream(ostmenu);
 
@@ -158,6 +153,13 @@ int main()
         {
             estadojogo = 2; // Mudar para o estado de jogo 2
             StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
+        };
+
+        //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão sair
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaosair))
+        {
+            StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
+            return 0;
         };
 
         //Lógica do Menu
@@ -210,12 +212,10 @@ int main()
             BeginDrawing();
             DrawTexture(ranking, 0, 0, WHITE);
 
-            //RETANGULO VISUAL VOLTAR TIRAR DEPOIS
-            //DrawRectangleLines(botaorankingvoltar.x, botaorankingvoltar.y, botaorankingvoltar.width, botaorankingvoltar.height, BLACK);
-
-            //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
+            //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão voltar, dentro do ranking
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaorankingvoltar))
             {
+                StopMusicStream(ostranking); //Para a música do ranking
                 estadojogo = 0; // Mudar para o estado de jogo 0 (MENU)
                 PlayMusicStream(ostmenu); //Volta a tocar a música do ranking
             };
