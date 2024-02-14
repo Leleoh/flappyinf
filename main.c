@@ -1,3 +1,7 @@
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-FLAPPY INF-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-=-=-=-=-=-=-=-=-=-=-=LEONEL HERNANDEZ E MATHEUS BELLO-=-=-=-=-=-=-=-=-
+*/
 #include <raylib.h>
 #include <time.h>
 #include <stdlib.h>
@@ -8,14 +12,18 @@ int random(int min, int max)
     return min + (rand()%(max-min+1)); //retorna um valor entre min e max
 }
 
-
-
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// FUNÇÃO PRINCIPAL MAIN
+//---------------------------------------------------------------------------------------------------------------------------------------------
 
 int main()
 {
 
-    int recorde = 0;
+    //---------------------------------------------------------------------------------------------------------------------------------------------
+    // DEFINIÇÕES INICIAS DE VARIÁVEIS
+    //---------------------------------------------------------------------------------------------------------------------------------------------
 
+    int recorde = 0;
 
     //Inicializar dispositivo de áudio
     InitAudioDevice();
@@ -69,34 +77,36 @@ int main()
     const float rotationDelay = 0.05f;
     float rotationStartTime = 0.0f;
 
-    //variáveis relacionadas ao chão
+    //Variáveis relacionadas ao chão
     int FloorX = 0;
     int FloorY = screenHeight-100;
     int FloorW = screenWidth;
     int FloorH = 20;
-    //variáveis relacionadas ao teto
+
+    //Variáveis relacionadas ao teto
     int RoofX = 0;
     int RoofY = 0;
     int RoofW = screenWidth;
     int RoofH = 3;
-    //variáveis do cano de cima
+
+    //Variáveis do cano de cima
     int tube1X = screenWidth;
     int tube1Y = 0;
     int tube1W = 102;
     int tube1H = 450;
 
+    //Variáveis relacionadas ao cano de baixo
     int tube2X = screenWidth-20;
     int tube2Y = 450;
     int tube2W = 102;
     int tube2H = 450;
 
-    //colisões
+    //Colisões
     Rectangle Floor = {FloorX, FloorY, FloorW, FloorH};
     bool collision;
     Rectangle Roof = {RoofX, RoofY, RoofW, RoofH};
     Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
     Rectangle tubebottom = {tube2X, tube2Y, tube2W, tube2H};
-
 
     //Variáveis de posição e controle do chão (Efeito do chão andar)
     float groundX1 = 0.0f;
@@ -121,7 +131,6 @@ int main()
     Sound bateu = LoadSound("./Recursos/hit.wav");
     Sound somasas = LoadSound("./Recursos/wing.wav");
 
-
     //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
     Rectangle botaojogar = { screenWidth / 2 - 290, screenHeight / 2 - 50, 200, 100 };
     Rectangle botaodificuldade = { screenWidth / 2 - 290, screenHeight / 2 + 125, 200, 30 };
@@ -138,7 +147,10 @@ int main()
     Texture2D Tubobaixo = LoadTexture("./Recursos/canobaixo.png");
     Texture2D Telafim = LoadTexture("./Recursos/telafim.png");
 
-    //Loop Principal
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// LOOP PRINCIPAL
+//---------------------------------------------------------------------------------------------------------------------------------------------
+
     while(!WindowShouldClose()) //Detecta o fechamento da janela
     {
 
@@ -157,16 +169,20 @@ int main()
         //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão ranking
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoranking))
         {
-            estadojogo = 2; // Mudar para o estado de jogo 2
-            StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
+            estadojogo = 2; // Mudar para o estado de jogo 2 (RANKING)
+            StopMusicStream(ostmenu); //Para a música do menu ao mudar para o ranking
         };
 
         //Verificação para se o botão esquerdo do mouse foi pressionado dentro da área executável do botão sair
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaosair))
         {
-            StopMusicStream(ostmenu); //Para a música ao mudar para o ranking
+            StopMusicStream(ostmenu); //Para a música do menu
             return 0;
         };
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------
+        // MENU INICIAL
+        //---------------------------------------------------------------------------------------------------------------------------------------------
 
         //Lógica do Menu
         if (estadojogo == 0)
@@ -198,14 +214,12 @@ int main()
                 DrawTexture(menu3, 0, 0, WHITE);
                 break;
             }
-            //Desenhar retângulo (TIRAR DEPOIS, APENAS PARA REFERÊNCIA)
-            //DrawRectangleLines(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height, BLACK);
-            //DrawRectangleLines(botaoranking.x, botaoranking.y, botaoranking.width, botaoranking.height, BLACK);
-            //DrawRectangleLines(botaodificuldade.x, botaodificuldade.y, botaodificuldade.width, botaodificuldade.height, BLACK);
-            //DrawRectangleLines(botaosair.x, botaosair.y, botaosair.width, botaosair.height, BLACK);
-
             EndDrawing();
         }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------
+        // RANKING
+        //---------------------------------------------------------------------------------------------------------------------------------------------
 
         //Mudar para a tela de ranking
         else if(estadojogo == 2)
@@ -223,11 +237,14 @@ int main()
             {
                 StopMusicStream(ostranking); //Para a música do ranking
                 estadojogo = 0; // Mudar para o estado de jogo 0 (MENU)
-                PlayMusicStream(ostmenu); //Volta a tocar a música do ranking
+                PlayMusicStream(ostmenu); //Volta a tocar a música do menu
             };
-
             EndDrawing();
         }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------
+        // GAMEPLAY
+        //---------------------------------------------------------------------------------------------------------------------------------------------
 
         //Muda para a gameplay
         else if(estadojogo == 1)
@@ -238,7 +255,6 @@ int main()
             {
                 speedpassaro = jumpForce;
                 PlaySound(somasas);
-
             }
 
             //Gravidade
@@ -291,14 +307,13 @@ int main()
             float rotation = 0.0f;
             if (speedpassaro < 0)
             {
-                rotation = -maxrotation - 10; //* DEG2RAD;
+                rotation = -maxrotation - 10;
                 rotationStartTime = GetTime();
             }
             else if (speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay)
             {
-                rotation = maxrotation + 20; //* DEG2RAD;
+                rotation = maxrotation + 20;
             }
-
 
             //Desenhar
             BeginDrawing();
@@ -355,12 +370,12 @@ int main()
             //Futuros elementos
 
 
-            //coisas relacionadas às colisões
+            //Coisas relacionadas às colisões
             Rectangle player = {posX-38, posY-65, 75, 50};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
 
-            //velocidade dos canos
+            //Velocidade dos canos
             if(score < 450)
             {
 
@@ -380,40 +395,31 @@ int main()
 
             }
 
-
-
             //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
             if(tube1X < -102)
             {
-
                 tube1X = screenWidth;
                 tube1Y = random(-350, 0);
                 score = score + 50;
                 PlaySound(pontos);
-
-
             }
-
 
             Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
             Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};
             bool onTube = CheckCollisionRecs(player, tubetop);
             bool onTube2 = CheckCollisionRecs(player, tubebottom);
 
-            //condicional de colisão com o teto
+            //Condicional de colisão com o teto
             if(onRoof)
             {
-
                 speedpassaro = 1;
-
             }
 
-
-            //condicional de colisão com o chão
+            //Condicional de colisão com o chão
             if(onFloor ||onTube || onTube2)
             {
                 PlaySound(bateu);
-                //reset de todas as variáveis
+                //Reset de todas as variáveis
                 FloorX = 0;
                 FloorY = screenHeight-100;
                 FloorW = screenWidth;
@@ -451,10 +457,7 @@ int main()
             }
             estadojogo = 0;
             score = 0;
-
-
             }
-
 
             DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
             DrawTexture(Tubobaixo, tube1X, tube1Y+450+200-20, WHITE);
@@ -463,12 +466,8 @@ int main()
             DrawRectangleRec(player, PURPLE);
             DrawText(TextFormat("Score: %d", score), 80, 0, 50, YELLOW);
 
-
-
             EndDrawing();
         }
-
-
     }
 
     //Limpar e fechar
