@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1707948233 source:c:\users\leone\desktop\flappyinf\main.c
+1707950463 source:c:\users\leone\desktop\flappyinf\main.c
 	<raylib.h>
 	<time.h>
 	<stdlib.h>
+	<stdio.h>
 
 1705764449 source:c:\users\leone\desktop\flappyinf\teste.c
 	<raylib.h>

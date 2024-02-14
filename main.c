@@ -7,9 +7,9 @@
 #include <raylib.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define SCREENWIDTH 1200
-
 
 
 int random(int min, int max)
@@ -485,10 +485,7 @@ int main()
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
 
-
             MoveCanos(&score, &tube1X, &tube1Y, pontos);
-
-
 
             Rectangle tubetop = {tube1X, tube1Y, tube1W-20, tube1H};
             Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};
