@@ -17,99 +17,98 @@ int random(int min, int max)
     return min + (rand()%(max-min+1)); //retorna um valor entre min e max
 }
 
- void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int *RoofY , int *RoofW,int *RoofH, int *tube1X, int *tube1Y, int *tube1W, int *tube1H, int *tube2X, int *tube2Y, int *tube2W, int *tube2H, float *posX, float *posY, int *recorde ,int*score, int *estadojogo ){
+void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int *RoofY, int *RoofW,int *RoofH, int *tube1X, int *tube1Y, int *tube1W, int *tube1H, int *tube2X, int *tube2Y, int *tube2W, int *tube2H, float *posX, float *posY, int *recorde,int*score, int *estadojogo )
+{
 
-   // const int SCREENWIDTH = 1200;
+    // const int SCREENWIDTH = 1200;
     const int screenheight = 800;
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
     Texture2D background = LoadTexture("./Recursos/floordia.png");
     Texture2D Telafim = LoadTexture("./Recursos/telafim.png");
-               // PlaySound(bateu);
-                //Reset de todas as variáveis
-                *FloorX = 0;
-                *FloorY = screenheight-100;
-                *FloorW = SCREENWIDTH;
-                *FloorH = 20;
-                *RoofX = 0;
-                *RoofY = 0;
-                *RoofW = SCREENWIDTH;
-                *RoofH = 3;
-                *tube1X = SCREENWIDTH;
-                *tube1Y = 0;
-                *tube1W = 102;
-                *tube1H = 450;
-                *tube2X = SCREENWIDTH-20;
-                *tube2Y = 450;
-                *tube2W = 102;
-                *tube2H = 450;
-                *posX = 100.0f;
-                *posY = 100.0f;
+    // PlaySound(bateu);
+    //Reset de todas as variáveis
+    *FloorX = 0;
+    *FloorY = screenheight-100;
+    *FloorW = SCREENWIDTH;
+    *FloorH = 20;
+    *RoofX = 0;
+    *RoofY = 0;
+    *RoofW = SCREENWIDTH;
+    *RoofH = 3;
+    *tube1X = SCREENWIDTH;
+    *tube1Y = 0;
+    *tube1W = 102;
+    *tube1H = 450;
+    *tube2X = SCREENWIDTH-20;
+    *tube2Y = 450;
+    *tube2W = 102;
+    *tube2H = 450;
+    *posX = 100.0f;
+    *posY = 100.0f;
 
-                int scoresalvo = *score;
+    int scoresalvo = *score;
 
-                    if(*recorde < *score)
-                    *recorde = *score;
+    if(*recorde < *score)
+        *recorde = *score;
 
-        while(!(IsKeyPressed(KEY_SPACE))){
-                BeginDrawing();
-                ClearBackground(RAYWHITE);
-                PlayMusicStream(ostmenu);
-                DrawTexture(background, 0, 0, WHITE);
-                DrawTexture(Telafim, 0, 0, WHITE);
-                DrawText(TextFormat("%d", scoresalvo), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-230,40, GREEN);
-                DrawText(TextFormat("%d", *recorde), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-160,40, BLUE);
-                EndDrawing();
+    while(!(IsKeyPressed(KEY_SPACE)))
+    {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        PlayMusicStream(ostmenu);
+        DrawTexture(background, 0, 0, WHITE);
+        DrawTexture(Telafim, 0, 0, WHITE);
+        DrawText(TextFormat("%d", scoresalvo), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-230,40, GREEN);
+        DrawText(TextFormat("%d", *recorde), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-160,40, BLUE);
+        EndDrawing();
 
-            *estadojogo = 0;
-            *score = 0;
+        *estadojogo = 0;
+        *score = 0;
 
-}}
+    }
+}
 
-void MoveCanos(int *score, int *tube1X, int *tube1Y){
+void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
+{
 
-        Sound pontos = LoadSound("./Recursos/point.wav");
-
-        const int screenheight = 800;
-
-
-            if(*score < 450)
-            {
-
-                *tube1X = *tube1X -11;
-            }
-            else if(*score <= 1000 && *score >= 450)
-            {
-
-                *tube1X = *tube1X -17;
-
-            }
-
-            else if(*score > 1000)
-            {
-
-                *tube1X = *tube1X -22;
-
-            }
-
-            //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
-            if(*tube1X < -102)
-            {
-                *tube1X = SCREENWIDTH;
-                *tube1Y = random(-350, 0);
-                *score = *score + 50;
-                PlaySound(pontos);
-            }
+    const int screenheight = 800;
 
 
+    if(*score < 450)
+    {
 
+        *tube1X = *tube1X -11;
+    }
+    else if(*score <= 1000 && *score >= 450)
+    {
 
+        *tube1X = *tube1X -17;
+
+    }
+
+    else if(*score > 1000)
+    {
+
+        *tube1X = *tube1X -22;
+
+    }
+
+    //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
+    if(*tube1X < -102)
+    {
+        *tube1X = SCREENWIDTH;
+        *tube1Y = random(-350, 0);
+        *score = *score + 50;
+        PlaySound(pontos);
+    }
 
 
 
 
 }
 
- void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *groundSpeed, float *posY, float *rotation, int *frameAtual, int *timer, int *frameSpeed){
+void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *groundSpeed, float *posY, float *rotation, int *frameAtual, int *timer, int *frameSpeed, Sound somasas)
+{
 
     const float gravidade = 0.8f;
     const float gravidadedobro = 1.2f;
@@ -118,80 +117,83 @@ void MoveCanos(int *score, int *tube1X, int *tube1Y){
     const float rotationDelay = 0.05f;
     float rotationStartTime = 0.0f;
 
-   // const int SCREENWIDTH = 1200;
+    // const int SCREENWIDTH = 1200;
     const int screenheight = 800;
-    Sound somasas = LoadSound("./Recursos/wing.wav");
-
-
-            //Controle do pulo
-            if (IsKeyPressed(KEY_SPACE))
-            {
-                *speedpassaro = jumpForce;
-                PlaySound(somasas);
-            }
-
-            //Gravidade
-            if (*speedpassaro < 0)
-            {
-                //Subida
-                *speedpassaro += gravidade * gravidade;
-            }
-            else
-            {
-                //Descida
-                *speedpassaro += gravidade * gravidadedobro;
-            }
-
-            //Limitação da velocidade de descida
-            if (*speedpassaro > 10.0f)
-            {
-                *speedpassaro = 12.0f;
-            }
-
-            //Movimento do pássaro
-            *posY += *speedpassaro;
-
-            //Asas batendo
-            *timer ++;
-            if (*timer >= *frameSpeed)
-            {
-                *frameAtual++;
-                if (*frameAtual > 2)
-                {
-                    *frameAtual = 0;
-                }
-                *timer = 0;
-            }
-
-            //Movimento do chão
-            *groundX1 -= *groundSpeed;
-            *groundX2 -= *groundSpeed;
-
-            if (*groundX1 <= -SCREENWIDTH)
-            {
-                *groundX1 = SCREENWIDTH;
-            }
-            if (*groundX2 <= -SCREENWIDTH)
-            {
-                *groundX2 = SCREENWIDTH;
-            }
-
-            //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
-
-
-            if (*speedpassaro < 0)
-            {
-                *rotation = -maxrotation - 10;
-                rotationStartTime = GetTime();
-            }
-            else if (*speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay)
-            {
-                *rotation = maxrotation + 20;
-            }
 
 
 
-            }
+    //Controle do pulo
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        *speedpassaro = jumpForce;
+        PlaySound(somasas);
+    }
+
+    //Gravidade
+    if (*speedpassaro < 0)
+    {
+        //Subida
+        *speedpassaro += gravidade * gravidade;
+    }
+    else
+    {
+        //Descida
+        *speedpassaro += gravidade * gravidadedobro;
+    }
+
+    //Limitação da velocidade de descida
+    if (*speedpassaro > 10.0f)
+    {
+        *speedpassaro = 12.0f;
+    }
+
+    //Movimento do pássaro
+    *posY += *speedpassaro;
+
+    //Asas batendo
+    *timer ++;
+    if (*timer >= *frameSpeed)
+    {
+        *frameAtual++;
+        if (*frameAtual > 2)
+        {
+            *frameAtual = 0;
+        }
+        *timer = 0;
+    }
+
+    //Movimento do chão
+    *groundX1 -= *groundSpeed;
+    *groundX2 -= *groundSpeed;
+
+    if (*groundX1 <= -SCREENWIDTH)
+    {
+        *groundX1 = SCREENWIDTH;
+    }
+    if (*groundX2 <= -SCREENWIDTH)
+    {
+        *groundX2 = SCREENWIDTH;
+    }
+
+    //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
+
+
+    if (*speedpassaro < 0)
+    {
+        *rotation = -maxrotation - 10;
+        rotationStartTime = GetTime();
+    }
+    else if (*speedpassaro > 0 && (GetTime() - rotationStartTime) > rotationDelay)
+    {
+        *rotation = maxrotation + 20;
+    }
+
+
+
+
+}
+
+
 
 
 
@@ -214,8 +216,8 @@ int main()
     InitAudioDevice();
 
     //Inicialização da janela
-   // const int SCREENWIDTH = 1200;
-      const int screenheight = 800;
+    // const int SCREENWIDTH = 1200;
+    const int screenheight = 800;
     InitWindow(SCREENWIDTH, screenheight, "FlappyInf");
 
 
@@ -435,8 +437,7 @@ int main()
         else if(estadojogo == 1)
         {
 
-
-        MovePassaro(&speedpassaro, &groundX1, &groundX2, &groundSpeed, &posY, &rotation, &frameAtual, &timer, &frameSpeed);
+            MovePassaro(&speedpassaro, &groundX1, &groundX2, &groundSpeed, &posY, &rotation, &frameAtual, &timer, &frameSpeed, somasas);
 
             //Desenhar
             BeginDrawing();
@@ -499,7 +500,8 @@ int main()
             bool onRoof = CheckCollisionRecs(player, Roof);
 
 
-            MoveCanos(&score, &tube1X, &tube1Y);
+            MoveCanos(&score, &tube1X, &tube1Y, pontos);
+
 
 
             Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
@@ -517,8 +519,8 @@ int main()
             if(onFloor ||onTube || onTube2)
             {
                 PlaySound(bateu);
-                derrota(&FloorX, &FloorY, &FloorW, &FloorH,  &RoofX, &RoofY , &RoofW, &RoofH, &tube1X, &tube1Y, &tube1W, &tube1H, &tube2X, &tube2Y, &tube2W, &tube2H, &posX, &posY, &recorde, &score, &estadojogo );
-                }
+                derrota(&FloorX, &FloorY, &FloorW, &FloorH,  &RoofX, &RoofY, &RoofW, &RoofH, &tube1X, &tube1Y, &tube1W, &tube1H, &tube2X, &tube2Y, &tube2W, &tube2H, &posX, &posY, &recorde, &score, &estadojogo );
+            }
 
             DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
             DrawTexture(Tubobaixo, tube1X, tube1Y+450+200-20, WHITE);
