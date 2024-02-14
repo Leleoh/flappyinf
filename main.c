@@ -102,9 +102,6 @@ void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
         PlaySound(pontos);
     }
 
-
-
-
 }
 
 void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *groundSpeed, float *posY, float *rotation, int *frameAtual, int *timer, int *frameSpeed, Sound somasas)
@@ -119,8 +116,6 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
 
     // const int SCREENWIDTH = 1200;
     const int screenheight = 800;
-
-
 
     //Controle do pulo
     if (IsKeyPressed(KEY_SPACE))
@@ -150,18 +145,6 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
     //Movimento do pássaro
     *posY += *speedpassaro;
 
-    //Asas batendo
-    *timer ++;
-    if (*timer >= *frameSpeed)
-    {
-        *frameAtual++;
-        if (*frameAtual > 2)
-        {
-            *frameAtual = 0;
-        }
-        *timer = 0;
-    }
-
     //Movimento do chão
     *groundX1 -= *groundSpeed;
     *groundX2 -= *groundSpeed;
@@ -176,8 +159,6 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
     }
 
     //Rotação de descida e subida do pássaro influenciada pela velocidade (A inclinadinha)
-
-
     if (*speedpassaro < 0)
     {
         *rotation = -maxrotation - 10;
@@ -188,16 +169,7 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
         *rotation = maxrotation + 20;
     }
 
-
-
-
 }
-
-
-
-
-
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 // FUNÇÃO PRINCIPAL MAIN
@@ -374,6 +346,8 @@ int main()
         //Lógica do Menu
         if (estadojogo == 0)
         {
+            UpdateMusicStream(ostmenu);
+            PlayMusicStream(ostmenu);
             //Atualizar a animação do menu
             menuTimer++;
             if(menuTimer >= menuFrameSpeed)
@@ -450,6 +424,18 @@ int main()
             DrawTexture(background, groundX1, screenheight - background.height, WHITE);
             DrawTexture(background, groundX2, screenheight - background.height, WHITE);
 
+            //Parte responsável pela animação das asas durante a gameplay
+                    (timer)++;
+            if (timer >= frameSpeed)
+            {
+                frameAtual++;
+                if (frameAtual > 2)
+                {
+                    frameAtual = 0;
+                }
+                timer = 0;
+            }
+
             // Asas batendo
             switch(frameAtual)
             {
@@ -504,7 +490,7 @@ int main()
 
 
 
-            Rectangle tubetop = {tube1X, tube1Y, tube1W, tube1H};
+            Rectangle tubetop = {tube1X, tube1Y, tube1W-20, tube1H};
             Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};
             bool onTube = CheckCollisionRecs(player, tubetop);
             bool onTube2 = CheckCollisionRecs(player, tubebottom);
@@ -524,8 +510,8 @@ int main()
 
             DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
             DrawTexture(Tubobaixo, tube1X, tube1Y+450+200-20, WHITE);
-            // DrawRectangleRec(tubetop, GOLD);
-            // DrawRectangleRec(tubebottom, GOLD);
+            //DrawRectangleRec(tubetop, GOLD);
+            //DrawRectangleRec(tubebottom, GOLD);
             //DrawRectangleRec(player, PURPLE);
             DrawText(TextFormat("Score: %d", score), 80, 0, 50, YELLOW);
 
