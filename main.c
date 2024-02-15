@@ -50,13 +50,14 @@ void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int
     *posX = 100.0f;
     *posY = 100.0f;
 
-    int scoresalvo = *score;
+    int scoresalvo = *score; //salva o score em uma variável local para exibção
 
-    if(*recorde < *score)
+    if(*recorde < *score)   //salva o recorde se for maior que a pontuação mais alta
         *recorde = *score;
 
     while(!(IsKeyPressed(KEY_SPACE)))
     {
+        //desenha os backgrounds para a tela de derrota e printa os pontos e o recorde salvo
         BeginDrawing();
         ClearBackground(RAYWHITE);
         PlayMusicStream(ostmenu);
@@ -65,7 +66,7 @@ void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int
         DrawText(TextFormat("%d", scoresalvo), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-230,40, GREEN);
         DrawText(TextFormat("%d", *recorde), (SCREENWIDTH/2)-50, (SCREENWIDTH/2)-160,40, BLUE);
         EndDrawing();
-
+        //ao fim, reseta o score global para zero e coloca o estado do jogo no modo menu
         *estadojogo = 0;
         *score = 0;
 
@@ -78,6 +79,8 @@ void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int
 
 void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
 {
+
+    //atualização da posição a cada instante subtraindo de sua posição 11, para cada vez que um treshold de score é atingido, o jogo fica cada vez mais rápido
 
     if(*score < 450)
     {
@@ -98,13 +101,13 @@ void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
 
     }
 
-    //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim
+    //Reseta a posição do tubo para o início da tela e também adiciona 50 pontos quando ele chega ao fim, também randomiza sua localização Y
     if(*tube1X < -102)
     {
         *tube1X = SCREENWIDTH;
         *tube1Y = random(-350, 0);
         *score = *score + 50;
-        PlaySound(pontos);
+        PlaySound(pontos);    //sons de potos
     }
 }
 
@@ -125,7 +128,7 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
     //Controle do pulo
     if (IsKeyPressed(KEY_SPACE))
     {
-        *speedpassaro = jumpForce;
+        *speedpassaro = jumpForce;  //faz o pássaro movimentar-se para cima caso espaço seja precionado
         PlaySound(somasas);
     }
 
@@ -154,6 +157,7 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
     *groundX1 -= *groundSpeed;
     *groundX2 -= *groundSpeed;
 
+    //movimentação do chão
     if (*groundX1 <= -SCREENWIDTH)
     {
         *groundX1 = SCREENWIDTH;
@@ -445,7 +449,7 @@ int main()
                 timer = 0;
             }
 
-            // Asas batendo
+            // switch case da batida de asas do pássaro, cada frame ele muda o switch, assim mudando a textura que o pássaro deve usar.
             switch(frameAtual)
             {
             case 0:
@@ -487,36 +491,44 @@ int main()
             }
 
             //Coisas relacionadas às colisões
-            Rectangle player = {posX-60, posY-65, 75, 50};
-            bool onFloor = CheckCollisionRecs(player, Floor);
+            Rectangle player = {posX-60, posY-65, 75, 50};      //retângulo do jogador
+            bool onFloor = CheckCollisionRecs(player, Floor);       //variáveis booleanas para colisão do chão e do teto
             bool onRoof = CheckCollisionRecs(player, Roof);
 
-            MoveCanos(&score, &tube1X, &tube1Y, pontos);
+            MoveCanos(&score, &tube1X, &tube1Y, pontos);        //função que mexe os canos
 
-            Rectangle tubetop = {tube1X, tube1Y, tube1W-20, tube1H};
-            Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};
-            bool onTube = CheckCollisionRecs(player, tubetop);
+            Rectangle tubetop = {tube1X, tube1Y, tube1W-20, tube1H};        //retangulo do cano superior
+            Rectangle tubebottom = {tube1X, tube1Y+450+200, tube2W, tube2H+100};        //retangulo do cano inferior
+            bool onTube = CheckCollisionRecs(player, tubetop);          //variável booleana de colisão para tanto o cano inferior quanto superior
             bool onTube2 = CheckCollisionRecs(player, tubebottom);
 
             //Condicional de colisão com o teto
             if(onRoof)
             {
-                speedpassaro = 1;
+                speedpassaro = 1;       //impede o pássaro de subir mais que o "teto" do jogo
             }
 
-            //Condicional de colisão com o chão
-            if(onFloor ||onTube || onTube2)
+            //Condicional de colisão com o chão tubo superior e inferior
+            if(onFloor ||onTube || onTube2)     //toca som de bater e chama a função derrota
             {
                 PlaySound(bateu);
                 derrota(&FloorX, &FloorY, &FloorW, &FloorH,  &RoofX, &RoofY, &RoofW, &RoofH, &tube1X, &tube1Y, &tube1W, &tube1H, &tube2X, &tube2Y, &tube2W, &tube2H, &posX, &posY, &recorde, &score, &estadojogo );
             }
 
+
+            //desenho de texturas
             DrawTexture(Tubocima, tube1X, tube1Y-30, WHITE);
             DrawTexture(Tubobaixo, tube1X, tube1Y+450+200-20, WHITE);
+
+            //desenho do score no canto superior esquerdo da tela
+            DrawText(TextFormat("Score: %d", score), 80, 0, 50, YELLOW);
+
+
+            //comandos para teste de hitboxes
             //DrawRectangleRec(tubetop, GOLD);
             //DrawRectangleRec(tubebottom, GOLD);
             //DrawRectangleRec(player, PURPLE);
-            DrawText(TextFormat("Score: %d", score), 80, 0, 50, YELLOW);
+
 
             EndDrawing();
         }
