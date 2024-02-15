@@ -487,7 +487,7 @@ int main()
             }
 
             //Coisas relacionadas às colisões
-            Rectangle player = {posX-38, posY-65, 75, 50};
+            Rectangle player = {posX-60, posY-65, 75, 50};
             bool onFloor = CheckCollisionRecs(player, Floor);
             bool onRoof = CheckCollisionRecs(player, Roof);
 
