@@ -3,7 +3,6 @@
 -=-=-=-=-=-=-=-=-=-=-=LEONEL HERNANDEZ E MATHEUS BELLO-=-=-=-=-=-=-=-=-
 */
 
-
 #include <raylib.h>
 #include <time.h>
 #include <stdlib.h>
@@ -16,6 +15,11 @@ int random(int min, int max)
 {
     return min + (rand()%(max-min+1)); //retorna um valor entre min e max
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// DERROTA
+//---------------------------------------------------------------------------------------------------------------------------------------------
 
 void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int *RoofY, int *RoofW,int *RoofH, int *tube1X, int *tube1Y, int *tube1W, int *tube1H, int *tube2X, int *tube2Y, int *tube2W, int *tube2H, float *posX, float *posY, int *recorde,int*score, int *estadojogo )
 {
@@ -68,11 +72,12 @@ void derrota(int *FloorX, int *FloorY, int *FloorW, int *FloorH, int *RoofX, int
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// MOVIMENTAÇÃO E LÓGICA DOS CANOS
+//---------------------------------------------------------------------------------------------------------------------------------------------
+
 void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
 {
-
-    const int screenheight = 800;
-
 
     if(*score < 450)
     {
@@ -101,8 +106,11 @@ void MoveCanos(int *score, int *tube1X, int *tube1Y, Sound pontos)
         *score = *score + 50;
         PlaySound(pontos);
     }
-
 }
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+// MOVIMENTAÇÃO E FÍSICA DO PÁSSARO
+//---------------------------------------------------------------------------------------------------------------------------------------------
 
 void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *groundSpeed, float *posY, float *rotation, int *frameAtual, int *timer, int *frameSpeed, Sound somasas)
 {
@@ -113,9 +121,6 @@ void MovePassaro(float *speedpassaro, float *groundX1, float *groundX2, float *g
     const float maxrotation = 5.0f;
     const float rotationDelay = 0.05f;
     float rotationStartTime = 0.0f;
-
-    // const int SCREENWIDTH = 1200;
-    const int screenheight = 800;
 
     //Controle do pulo
     if (IsKeyPressed(KEY_SPACE))
@@ -275,7 +280,7 @@ int main()
     //Carregar música do menu
     Music ostmenu = LoadMusicStream("./Recursos/ostmenu.mp3");
     PlayMusicStream(ostmenu);
-    const float volumemenu = 0.2f;
+    const float volumemenu = 0.5f;
     SetMusicVolume(ostmenu, volumemenu);
 
     //Carregar música do ranking
@@ -286,9 +291,13 @@ int main()
 
     //Carregar efeitos sonoros
     Sound pontos = LoadSound("./Recursos/point.wav");
+    SetSoundVolume(pontos, 0.4f);
     Sound transicao = LoadSound("./Recursos/swoosh.wav");
+    SetSoundVolume(transicao, 0.4f);
     Sound bateu = LoadSound("./Recursos/hit.wav");
+    SetSoundVolume(bateu, 0.4f);
     Sound somasas = LoadSound("./Recursos/wing.wav");
+    SetSoundVolume(somasas, 0.4f);
 
     //Formatos dos botões para fazer as ações (JOGAR, RANKING, DIFICULDADE, SAIR)
     Rectangle botaojogar = { SCREENWIDTH / 2 - 290, screenheight / 2 - 50, 200, 100 };
@@ -477,9 +486,6 @@ int main()
                 break;
             }
 
-            //Futuros elementos
-
-
             //Coisas relacionadas às colisões
             Rectangle player = {posX-38, posY-65, 75, 50};
             bool onFloor = CheckCollisionRecs(player, Floor);
@@ -516,8 +522,29 @@ int main()
         }
     }
 
-    //Limpar e fechar
+    //Limpar os arquivos carregados
+    //Texturas
     UnloadTexture(background);
+    UnloadTexture(menu1);
+    UnloadTexture(menu2);
+    UnloadTexture(menu3);
+    UnloadTexture(ranking);
+    UnloadTexture(asa1);
+    UnloadTexture(asa2);
+    UnloadTexture(asa3);
+    UnloadTexture(Tubocima);
+    UnloadTexture(Tubobaixo);
+    UnloadTexture(Telafim);
+    //Musics
+    UnloadMusicStream(ostmenu);
+    UnloadMusicStream(ostranking);
+    //Sounds
+    UnloadSound(pontos);
+    UnloadSound(transicao);
+    UnloadSound(bateu);
+    UnloadSound(somasas);
+
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
